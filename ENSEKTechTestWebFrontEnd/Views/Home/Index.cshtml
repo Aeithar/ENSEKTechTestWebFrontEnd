@@ -1,0 +1,54 @@
+﻿@using ENSEKTechTestWebFrontEnd.Models;
+@model IEnumerable<RestAPI_NS.AccountDetails>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <table id="buttonsTable" class="table" cellspacing="0">
+        <tr>
+            <td>
+              @using (Html.BeginForm("Index", "Home"))
+              {
+                  <input type="submit" value=" Refresh List " />
+              }
+            </td>
+            <td>
+                @using (Html.BeginForm("UploadCSV", "Home"))
+                {
+                    <input type="submit" value=" Upload CSV " />
+                }
+            </td>
+        </tr>
+    </table>
+    <br/>
+    <table id="resultsTable" class="table" cellspacing="0">
+        <thead>
+            <tr>
+                @foreach (var property in Model.GetType().GetGenericArguments()[0].GetProperties())
+                {
+                    <th>@property.Name</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                @foreach (var property in item.GetType().GetProperties())
+                {
+                    @if (property.PropertyType == typeof(DateTimeOffset?) && property.GetValue(item) != null)
+                    {
+                        <td>@(((DateTimeOffset)property.GetValue(item)).ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                    }
+                    else
+                    {
+                        <td>@property.GetValue(item)</td>
+                    }
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
